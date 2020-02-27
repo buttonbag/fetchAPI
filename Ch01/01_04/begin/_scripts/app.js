@@ -1,7 +1,7 @@
 'use strict';
 
-const url = 'https://us-street.api.smartystreets.com/street-address?auth-id=3377004542077807&candidates=10&match=invalid&street=86%20Frontage%20Road&street2=&city=Belmont&state=MA';
-const nps = 'https://developer.nps.gov/api/v1/parks?parkCode=acad&api_key=9SMjAXxMbVpMYIpG6lEHNRVbh9haR7GHbzfUItEu';
+const smartyUrl = 'https://us-street.api.smartystreets.com/street-address?auth-id=3377004542077807&candidates=10&match=invalid&street=86%20Frontage%20Road&street2=&city=Belmont&state=MA';
+const nps = 'https://developer.nps.gov/api/v1/parks?stateCode=ca&api_key=9SMjAXxMbVpMYIpG6lEHNRVbh9haR7GHbzfUItEu';
 
 const updateUISuccess = function(data) {
     console.log(data);
@@ -27,12 +27,5 @@ const createRequest = function(url) {
     httpRequest.send();
 };
 
-const createRequestNPS = function(nps) {
-    const httpRequest = new XMLHttpRequest(nps);
-    httpRequest.addEventListener('readystatechange', (nps) => responseMethod(httpRequest))
-    httpRequest.open('GET', nps);
-    httpRequest.send();
-};
-
-createRequest(url);
-createRequestNPS(nps);
+createRequest(smartyUrl);
+createRequest(nps);
