@@ -9,26 +9,36 @@ const stateField = document.querySelector('#state');
 const zipField = document.querySelector('#zip');
 
 
-const updateUISuccess = function(data) {
+const smartyUpdateUISuccess = function(data) {
+    const pasedData = JSON.parse(data);
+    console.log(pasedData);
+    const zip = pasedData[0].components.zipcode;
+    const plus4 = pasedData[0].components.plus4_code;
+    zipField.value = (zip + '-' + plus4);
+};
+const smartyUpdateUIError = function(data) {
     console.log(data);
 };
-const updateUIError = function(data) {
+const npsUpdateUISuccess = function(data) {
+    console.log(data);
+};
+const npsUpdateUIError = function(data) {
     console.log(data);
 };
 
-const responseMethod = function(httpRequest) {
+const responseMethod = function(httpRequest, succeed, fail) {
     if (httpRequest.readyState === 4) {
         if (httpRequest.status === 200) {
-            updateUISuccess(httpRequest.responseText);
+            succeed(httpRequest.responseText);
         } else {
-            updateUIError(httpRequest.status + ': ' + httpRequest.responseText);
+            fail(httpRequest.status + ': ' + httpRequest.responseText);
         }
     }
 }
 
-const createRequest = function(url) {
+const createRequest = function(url, succeed, fail) {
     const httpRequest = new XMLHttpRequest(url);
-    httpRequest.addEventListener('readystatechange', (url) => responseMethod(httpRequest))
+    httpRequest.addEventListener('readystatechange', (url) => responseMethod(httpRequest, succeed, fail))
     httpRequest.open('GET', url);
     httpRequest.send();
 };
@@ -41,12 +51,12 @@ const checkCompletion = function () {
                 '&street=' + addressField.value +
                 '&city=' + cityField.value +
                 '&state=' + stateField.value;
-            createRequest(requestUrl);
+            createRequest(requestUrl, smartyUpdateUISuccess, smartyUpdateUIError);
     }
 }
 
 // createRequest(smartyUrl);
-createRequest(nps);
+createRequest(nps, npsUpdateUISuccess, npsUpdateUIError);
 
 addressField.addEventListener('blur', checkCompletion);
 cityField.addEventListener('blur', checkCompletion);
