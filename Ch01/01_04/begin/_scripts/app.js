@@ -9,21 +9,28 @@ const stateField = document.querySelector('#state');
 const zipField = document.querySelector('#zip');
 const parkThumb = document.querySelector('#specials h2 img');
 const parkSection = document.querySelector('#specials');
+const parkName = document.querySelector('#specials h2 a');
+const parkDesc = document.querySelector('#specials p');
 
 
 
 const smartyUpdateUISuccess = function(data) {
-    const pasedData = JSON.parse(data);
-    // console.log(pasedData);
-    const zip = pasedData[0].components.zipcode;
-    const plus4 = pasedData[0].components.plus4_code;
+    const parseData = JSON.parse(data);
+    // console.log(parseData);
+    const zip = parseData[0].components.zipcode;
+    const plus4 = parseData[0].components.plus4_code;
     zipField.value = (zip + '-' + plus4);
 };
 const smartyUpdateUIError = function(error) {
     console.log(error);
 };
 const npsUpdateUISuccess = function(data) {
-    console.log(data);
+    const parseData = JSON.parse(data);
+    console.log(parseData);
+    const number = Math.floor(Math.random() * parseData.data.length);
+    parkName.textContent = parseData.data[number].fullName;
+    parkName.href = parseData.data[number].url;
+    parkDesc.textContent = parseData.data[number].description;
     parkThumb.src = 'https://www.nps.gov/common/commonspot/templates/assetsCT/images/branding/logo.png';
     parkSection.classList.remove('hidden');
 };
@@ -61,8 +68,11 @@ const checkCompletion = function () {
 }
 
 // createRequest(smartyUrl);
-createRequest(nps, npsUpdateUISuccess, npsUpdateUIError);
+// createRequest(nps, npsUpdateUISuccess, npsUpdateUIError);
 
 addressField.addEventListener('blur', checkCompletion);
 cityField.addEventListener('blur', checkCompletion);
 stateField.addEventListener('blur', checkCompletion);
+window.addEventListener('DOMContentLoaded', () => {
+    createRequest(nps, npsUpdateUISuccess, npsUpdateUIError);
+});
